@@ -10,6 +10,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "aoaddons"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "chrono 0.4.10",
+ "derive_more",
+ "fake_clock",
+ "lazy_static",
+ "log 0.4.8",
+ "packet_sniffer",
+ "photon_decode",
+ "serde",
+ "serde_json",
+ "simplelog",
+ "timer",
+]
+
+[[package]]
+name = "aoaddonsjs"
+version = "0.1.0"
+dependencies = [
+ "aoaddons",
+ "lazy_static",
+ "log 0.4.8",
+ "neon",
+ "neon-build",
+]
+
+[[package]]
 name = "arrayref"
 version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -73,6 +102,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "cc"
+version = "1.0.52"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3d87b23d6a92cd03af510a5ade527033f6aa6fa92161e2d5863a907d4c5e31d"
+
+[[package]]
 name = "cfg-if"
 version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -126,6 +161,12 @@ dependencies = [
  "cfg-if",
  "lazy_static",
 ]
+
+[[package]]
+name = "cslice"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "697c714f50560202b1f4e2e09cd50a421881c83e9025db75d15f276616f04f40"
 
 [[package]]
 name = "derive_more"
@@ -213,29 +254,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
-name = "libaoaddons"
-version = "0.1.0"
-dependencies = [
- "bytes",
- "chrono 0.4.10",
- "cpython",
- "derive_more",
- "fake_clock",
- "lazy_static",
- "log 0.4.8",
- "packet_sniffer",
- "photon_decode",
- "serde",
- "serde_json",
- "simplelog",
- "timer",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.66"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d515b1f41455adea1313a4a2ac8a8a477634fbae63cc6100e3aebb207ce61558"
+
+[[package]]
+name = "libpyaoaddons"
+version = "0.1.0"
+dependencies = [
+ "aoaddons",
+ "cpython",
+ "lazy_static",
+ "log 0.4.8",
+]
 
 [[package]]
 name = "log"
@@ -260,6 +292,48 @@ name = "memchr"
 version = "2.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3197e20c7edb283f87c071ddfc7a2cca8f8e0b888c242959846a6fce03c72223"
+
+[[package]]
+name = "neon"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "53b85accbbd250627f899a6fc1f220bbb4c8c2ff6dc71830dc6b752b39c2eb97"
+dependencies = [
+ "cslice",
+ "neon-build",
+ "neon-runtime",
+ "semver",
+]
+
+[[package]]
+name = "neon-build"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ae406bf1065c4399e69d328a3bd8d4f088f2a205dc3881bf68c0ac775bfef337"
+dependencies = [
+ "cfg-if",
+ "neon-sys",
+]
+
+[[package]]
+name = "neon-runtime"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d8465ac4ed3f340dead85e053b75a5f639f48ac6343b3523eff90a751758eead"
+dependencies = [
+ "cfg-if",
+ "neon-sys",
+]
+
+[[package]]
+name = "neon-sys"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ae4cf3871ca5a395077e68144c1754e94e9e1e3329e7f8399d999ca573ed89a"
+dependencies = [
+ "cc",
+ "regex",
+]
 
 [[package]]
 name = "num"
@@ -493,6 +567,21 @@ name = "ryu"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bfa8506c1de11c9c4e4c38863ccbe02a305c8188e85a05a784c9e11e1c3910c8"
+
+[[package]]
+name = "semver"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d7eb9ef2c18661902cc47e535f9bc51b78acd254da71d375c2f6720d9a40403"
+dependencies = [
+ "semver-parser",
+]
+
+[[package]]
+name = "semver-parser"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "388a1df253eca08550bef6c72392cfe7c30914bf41df5269b68cbd6ff8f570a3"
 
 [[package]]
 name = "serde"

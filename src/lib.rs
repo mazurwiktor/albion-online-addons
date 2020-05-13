@@ -1,3 +1,11 @@
+#[macro_use]
+extern crate lazy_static;
+
+pub mod photon_messages;
+pub mod game;
+mod translate;
+mod publisher;
+
 use log::*;
 use simplelog::*;
 use std::env;

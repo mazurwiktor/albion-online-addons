@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -o errexit
+
+build_wheel() {
+    set -x
+    python --version
+    pip install -U pip wheel
+    pip install -U -r requirements.txt
+    python setup.py clean
+    python setup.py bdist_wheel
+    pip uninstall -y autopy
+    pip install autopy --no-index -f dist
+    pushd /tmp
+    python -c "import autopy"
+    popd
+    set +x
+}
+
+eval "$(pyenv init -)"
+rustup default nightly
+
+pyenv shell 3.7.0
+build_wheel
+
+pyenv shell 3.6.5
+build_wheel

@@ -1,18 +1,24 @@
 [package]
-name = "libaoaddons"
+name = "aoaddons"
 version = "0.1.0"
 authors = ["Wiktor Mazur <wiktormazur1@gmail.com>"]
 edition = "2018"
 build = "build.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[lib]
-name = "libaoaddons"
-path = "src/lib_python.rs"
-crate-type = ["dylib"]
+[workspace]
+members = [
+    "aoaddons-python", "aoaddons-node"
+]
 
-[dependencies.cpython]
-version = "0.3"
+[lib]
+name = "aoaddons"
+
+[profile.dev]
+panic = "unwind"
+
+[profile.release]
+panic = "unwind"
 
 [dependencies]
 packet_sniffer = { path = "./lib/packet-sniffer" }

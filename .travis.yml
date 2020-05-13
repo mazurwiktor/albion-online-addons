@@ -1,0 +1,36 @@
+language: python
+matrix:
+  include:
+    - name: Linux 64-bit
+      sudo: required
+      services:
+        - docker
+      env:
+        - CIBW_SKIP=*manylinux1_i686*
+    - name: Linux 32-bit
+      sudo: required
+      services:
+        - docker
+      env:
+        - CIBW_SKIP=*manylinux1_x86_64*
+    - name: macOS
+      os: osx
+      language: generic
+env:
+  global:
+    - TWINE_USERNAME=mazurwiktor
+    # Note: TWINE_PASSWORD is set in Travis settings.
+
+script:
+  - python3 -m pip install cibuildwheel~=1.4 setuptools-rust>=0.10.1
+  - export RUST_BACKTRACE=1
+  - export CIBW_BEFORE_BUILD="pip install setuptools-rust>=0.10.1 && source aoaddons-python/scripts/travis"
+  - export CIBW_SKIP="pp* cp27-* cp34-* cp35-* $CIBW_SKIP"
+  - export CIBW_ENVIRONMENT="CI=\"$CI\" TRAVIS_BRANCH=\"$TRAVIS_BRANCH\" TRAVIS_COMMIT=\"$TRAVIS_COMMIT\" PATH=\"\$HOME/.cargo/bin:\$PATH\""
+  - export CIBW_TEST_COMMAND="python -c 'import pyaoaddons'"
+  - python3 -m cibuildwheel --output-dir wheelhouse aoaddons-python/
+  - |
+    if [[ ! -z "$TRAVIS_TAG" ]]; then
+      pip install twine
+      python -m twine upload wheelhouse/*.whl
+    fi
