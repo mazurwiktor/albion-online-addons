@@ -19,10 +19,14 @@ except ImportError:
 setup_requires = ["setuptools-rust>=0.10.1", "wheel"]
 install_requires = []
 
+import os
+print("LISTINGPWD:")
+print(os.listdir('.'))
+print(os.listdir('..'))
 setup(
-    name="aoaddons",
-    packages=["aoaddons"],
-    rust_extensions=[RustExtension("libaoaddons", 'Cargo.toml', binding=Binding.RustCPython)],
+    name="pyaoaddons",
+    packages=["pyaoaddons"],
+    rust_extensions=[RustExtension("libpyaoaddons", binding=Binding.RustCPython)],
     install_requires=install_requires,
     setup_requires=setup_requires,
     include_package_data=True,

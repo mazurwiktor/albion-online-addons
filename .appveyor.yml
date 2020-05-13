@@ -1,0 +1,62 @@
+image: Visual Studio 2017
+environment:
+  TWINE_USERNAME: mazurwiktor
+  # Note: TWINE_PASSWORD is set in Appveyor settings.
+  matrix:
+    # Stable 64-bit MSVC
+    - channel: stable
+      target: x86_64-pc-windows-msvc
+      PYTHON: "C:\\Python36-x64"
+      WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/x64/Packet.lib"
+      PYTHON_SCRIPTS: "C:\\Python36-x64\\Scripts"
+      PYTHON_LIB: "C:\\Python36-x64\\libs\\python36.lib"
+      CIBW_SKIP: "*win32* pp* cp27-* cp34-* cp35-*"
+      CIBW_BEFORE_BUILD: python -m pip install setuptools setuptools-rust==0.10.3
+    # Stable 32-bit MSVC
+    - channel: stable
+      target: i686-pc-windows-msvc
+      PYTHON: "C:\\Python36"
+      WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
+      PYTHON_SCRIPTS: "C:\\Python36\\Scripts"
+      PYTHON_LIB: "C:\\Python36\\libs\\python36.lib"
+      CIBW_SKIP: "*win_amd64* pp* cp27-* cp34-* cp35-*"
+      CIBW_BEFORE_BUILD: python -m pip install setuptools setuptools-rust==0.10.3
+
+
+# From https://github.com/starkat99/appveyor-rust/blob/master/appveyor.yml
+install:
+  - SET PATH=%PYTHON%;%path%
+  - SET PATH=%PYTHON_SCRIPTS%;%path%
+  - python --version
+  - ps: mkdir C:/dl
+  - curl -o "C:/dl/wpd.zip" "https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip"
+  - ps: Add-Type -AssemblyName system.io.compression.filesystem
+  - ps: "[io.compression.zipfile]::ExtractToDirectory(\"C:/dl/wpd.zip\", \"C:/dl/wpdpack\")"
+  - ps: cp ${env:WPD_LIB_PATH} "lib"
+  - SET LIB="lib";%lib%
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -yv --default-toolchain nightly --default-host %target%
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustc -vV
+  - cargo -vV
+  - python -m pip install -U pip
+  - python -m pip install cibuildwheel~=1.4 setuptools-rust>=0.10.1
+
+test_script:
+  - cargo test
+
+build_script:
+  - cibuildwheel --output-dir wheelhouse aoaddons-python\\
+  - >
+    IF "%APPVEYOR_REPO_BRANCH%" == "master"
+    (
+    IF [%APPVEYOR_PULL_REQUEST_HEAD_COMMIT%] == []
+    (
+    python -m pip install twine
+    &&
+    @python -m twine upload "wheelhouse/*.whl" --repository-url https://test.pypi.org/legacy/ --username %TWINE_USERNAME% --password %TWINE_TEST_PASSWORD%
+    )
+    )
+artifacts:
+  - path: "wheelhouse\\*.whl"
+    name: Wheels

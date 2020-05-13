@@ -4,14 +4,34 @@ use cpython::ToPyObject;
 use cpython::PythonObject;
 use cpython::PyDict;
 
-use crate::game::Event;
-use crate::game::events;
-use crate::game::StaticId;
-use crate::photon_messages;
+use aoaddons::game::Event;
+use aoaddons::game::events;
+use aoaddons::game::StaticId;
+use aoaddons::photon_messages;
 
-impl ToPyObject for Event {
+pub trait ToPyObjectWrapper {
+    type ObjectType : PythonObject;
+
+    /// Converts self into a Python object.
+    fn to_py_object(&self, py: Python) -> Self::ObjectType;
+
+    #[inline]
+    fn into_py_object(self, py: Python) -> Self::ObjectType
+      where Self: Sized
+    {
+        self.to_py_object(py)
+    }
+}
+
+impl ToPyObjectWrapper for Event {
     type ObjectType = PyObject;
-    fn to_py_object(&self, py: Python) -> Self::ObjectType {
+
+    fn to_py_object(&self, py: Python) -> Self::ObjectType
+    {
+        self.clone().into_py_object(py)
+    }
+
+    fn into_py_object(self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
 
         match self {
@@ -60,7 +80,7 @@ impl ToPyObject for Event {
     }
 }
 
-impl ToPyObject for StaticId {
+impl ToPyObjectWrapper for StaticId {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         self.inner().into_py_object(py).into_object()
@@ -68,7 +88,7 @@ impl ToPyObject for StaticId {
 }
 
 
-impl ToPyObject for events::Player {
+impl ToPyObjectWrapper for events::Player {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
@@ -79,19 +99,19 @@ impl ToPyObject for events::Player {
     }
 }
 
-impl ToPyObject for events::Damage {
+impl ToPyObjectWrapper for events::Damage {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
 
         event.set_item(py, "source", self.source.into_py_object(py)).unwrap_or(());
-        event.set_item(py, "target", self.target.into_py_object(py)).unwrap_or(());
+        event.set_item(py, "target", self.target.unwrap().into_py_object(py)).unwrap_or(());
         event.set_item(py, "value", self.value.into_py_object(py).into_object()).unwrap_or(());
         event.into_object()
     }
 }
 
-impl ToPyObject for events::Fame {
+impl ToPyObjectWrapper for events::Fame {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
@@ -102,7 +122,7 @@ impl ToPyObject for events::Fame {
     }
 }
 
-impl ToPyObject for events::Items {
+impl ToPyObjectWrapper for events::Items {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
@@ -113,7 +133,7 @@ impl ToPyObject for events::Items {
     }
 }
 
-impl ToPyObject for events::Party {
+impl ToPyObjectWrapper for events::Party {
     type ObjectType = PyObject;
     fn to_py_object(&self, py: Python) -> Self::ObjectType {
         let event = PyDict::new(py);
@@ -131,7 +151,7 @@ macro_rules! set_dict_item {
     };
 }
 
-impl ToPyObject for photon_messages::Items {
+impl ToPyObjectWrapper for photon_messages::Items {
     type ObjectType = PyDict;
 
     fn into_py_object(self, py: Python) -> Self::ObjectType {

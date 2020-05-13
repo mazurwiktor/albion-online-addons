@@ -1,25 +1,23 @@
+mod convert;
+
 #[macro_use]
 extern crate cpython;
 
 #[macro_use]
 extern crate lazy_static;
 
-mod photon_messages;
-mod game;
-mod translate;
-mod publisher;
-mod crosslang;
-mod api;
-
 use std::sync::Mutex;
 use log::*;
 
 use cpython::PyResult;
 use cpython::Python;
-use cpython::ToPyObject;
 use cpython::PythonObject;
 use cpython::ObjectProtocol;
 use cpython::PyTuple;
+
+use aoaddons::game;
+
+use convert::ToPyObjectWrapper;
 
 lazy_static! {
     static ref PY_CALLBACKS: Mutex<Vec<cpython::PyObject>> = Mutex::new(Vec::new());
@@ -42,7 +40,7 @@ fn python_callbacks_subscriber(event: game::Event) {
 }
 
 fn initialize(_py: Python) -> PyResult<u32> {
-    api::initialize(vec![
+    aoaddons::initialize(vec![
         Box::new(python_callbacks_subscriber)
     ]).map_or(Ok(2), |_| {Ok(0)})
 }
@@ -56,7 +54,7 @@ fn subscribe(_py: Python, callable: cpython::PyObject) -> PyResult<u32> {
 }
 
 
-py_module_initializer!(libaoaddons, initlibaoaddons, PyInit_libaoaddons, |py, m| {
+py_module_initializer!(libpyaoaddons, initlibpyaoaddons, PyInit_libpyaoaddons, |py, m| {
     m.add(py, "__doc__", "This module is implemented in Rust")?;
     m.add(py, "initialize", py_fn!(py, initialize()))?;
     m.add(py, "subscribe", py_fn!(py, subscribe(callable: cpython::PyObject)))?;
