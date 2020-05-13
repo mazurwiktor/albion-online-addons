@@ -1,6 +1,21 @@
+# Rust
 **/target
 **/*.rs.bk
 **/target
 damage-meter.log
 *.so
 .vscode
+
+# Python
+.tox
+.pytest_cache
+*.spec
+env
+**/build
+**/dist
+**/*.egg-info
+*.egg
+**/.eggs
+__pycache__
+albion-online-stats.cfg
+backend.log
