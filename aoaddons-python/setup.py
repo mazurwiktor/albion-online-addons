@@ -28,12 +28,15 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     setup(
         name="pyaoaddons",
         packages=["pyaoaddons"],
+        author="Wiktor Mazur",
+        author_email="wiktormazur1@gmail.com",
+        url="https://github.com/mazurwiktor/albion-online-addons",
         long_description=long_description,
         long_description_content_type='text/markdown',
         rust_extensions=[RustExtension("libpyaoaddons", binding=Binding.RustCPython)],
         install_requires=install_requires,
         setup_requires=setup_requires,
         include_package_data=True,
-        version="0.1.1",
+        version="0.1.2",
         zip_safe=False,
     )
