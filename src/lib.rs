@@ -60,7 +60,7 @@ fn initialize_logging() {
     CombinedLogger::init(vec![WriteLogger::new(
         get_logging_level(),
         Config::default(),
-        File::create("backend.log").unwrap(),
+        File::create("aoaddons.log").unwrap(),
     )])
     .unwrap();
 }
