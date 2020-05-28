@@ -105,7 +105,10 @@ impl ToPyObjectWrapper for events::Damage {
         let event = PyDict::new(py);
 
         event.set_item(py, "source", self.source.into_py_object(py)).unwrap_or(());
-        event.set_item(py, "target", self.target.unwrap().into_py_object(py)).unwrap_or(());
+        if let Some(target) = self.target
+        {
+            event.set_item(py, "target", target.into_py_object(py)).unwrap_or(());
+        }
         event.set_item(py, "value", self.value.into_py_object(py).into_object()).unwrap_or(());
         event.into_object()
     }

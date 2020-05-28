@@ -37,6 +37,6 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
         install_requires=install_requires,
         setup_requires=setup_requires,
         include_package_data=True,
-        version="0.1.2",
+        version="0.1.3",
         zip_safe=False,
     )
