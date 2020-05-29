@@ -22,7 +22,7 @@ env:
     # Note: TWINE_PASSWORD is set in Travis settings.
 
 script:
-  - python3 -m pip install cibuildwheel~=1.4 setuptools-rust>=0.10.1
+  - python3 -m pip install cibuildwheel==1.4.1 setuptools-rust>=0.10.1
   - export RUST_BACKTRACE=1
   - export CIBW_BEFORE_BUILD="pip install setuptools-rust>=0.10.1 && source aoaddons-python/scripts/travis"
   - export CIBW_SKIP="pp* cp27-* cp34-* cp35-* $CIBW_SKIP"

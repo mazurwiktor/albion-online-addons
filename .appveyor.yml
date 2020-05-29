@@ -40,7 +40,7 @@ install:
   - rustc -vV
   - cargo -vV
   - python -m pip install -U pip
-  - python -m pip install cibuildwheel~=1.4 setuptools-rust>=0.10.1
+  - python -m pip install cibuildwheel==1.4.1 setuptools-rust>=0.10.1
 
 test_script:
   - cargo test
