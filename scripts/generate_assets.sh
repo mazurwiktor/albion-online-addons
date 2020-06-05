@@ -28,11 +28,13 @@ if [[ -z $localization_file ]]; then
     exit 1
 fi
 
-echo "Generating application/src/assets/item_category_map.json..."
-python scripts/item_category_map.py $items_file | python -m json.tool > assets/item_category_map.json
+echo "Generating aoaddons-python/pyaoaddons/item_category_mapping.py..."
+echo "mapping =" > aoaddons-python/pyaoaddons/item_category_mapping.py
+python scripts/item_category_map.py $items_file >> aoaddons-python/pyaoaddons/item_category_mapping.py
 
-echo "Generating application/src/assets/localization.json..."
-python scripts/localization.py $localization_file | python -m json.tool > assets/localization.json
+echo "Generating aoaddons-python/pyaoaddons/localization_mapping.py..."
+echo "mapping =" > aoaddons-python/pyaoaddons/localization_mapping.py
+python scripts/localization.py $localization_file >> aoaddons-python/pyaoaddons/localization_mapping.py
 
-echo "Generating backend/assets/item_ids.txt..."
+echo "Generating assets/item_ids.txt..."
 python scripts/item_id.py $items_file > assets/item_ids.txt

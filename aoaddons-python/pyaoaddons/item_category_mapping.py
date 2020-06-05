@@ -1,4 +1,4 @@
-{
+mapping = {
     "T2_POTION_HEAL": "potion",
     "T4_POTION_HEAL": "potion",
     "T4_POTION_HEAL@1": "potion",

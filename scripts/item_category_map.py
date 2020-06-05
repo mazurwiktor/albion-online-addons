@@ -30,4 +30,4 @@ for child in root:
         for e in ench:
             add_item(nd, f"{child.attrib['uniquename']}@{e.attrib['enchantmentlevel']}", child.attrib)
 
-print(json.dumps(nd))
+print(json.dumps(nd, indent=4))

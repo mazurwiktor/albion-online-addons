@@ -27,4 +27,4 @@ for child in root[0]:
             for desc in loc:
                 add_item(nd, tuid, desc.text)
 
-print(json.dumps(nd))
+print(json.dumps(nd, indent=4))

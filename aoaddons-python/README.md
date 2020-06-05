@@ -19,6 +19,27 @@ After invocation library starts to listen to game packets.
 
 Returns `InitializationResult`
 
+## item_category_mapping
+
+Dictionary containing human readable category names for coded items.
+
+E.g 
+```python
+{
+    "T6_POTION_HEAL": "potion"
+}
+```
+
+## localization_mapping
+
+Dictionary containing human readable names for coded items.
+
+E.g 
+```python
+{
+    "T8_ARTEFACT_2H_CURSEDSTAFF_MORGANA": "Elder's Bloodforged Catalyst"
+}
+```
 
 ## Available game events
 
