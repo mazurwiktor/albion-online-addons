@@ -1,46 +1,14 @@
 mod decode;
 mod error;
 mod layout;
+mod codes;
 
 pub use decode::*;
 use error::*;
 pub use layout::*;
 
 use std::collections::HashMap;
-use std::convert::TryFrom;
 use std::io::Cursor;
-
-impl TryFrom<(&ReliableCommand, &mut Cursor<&[u8]>)> for Message {
-    type Error = PhotonDecodeError;
-
-    fn try_from(message: (&ReliableCommand, &mut Cursor<&[u8]>)) -> Result<Self, Self::Error> {
-        let (command, cursor) = message;
-        let _: u8 = cursor.decode()?;
-        let msg_type: u8 = cursor.decode()?;
-        match msg_type {
-            2 => {
-                let v = cursor.decode().map_err(|e| e.extend("Request".into()))?;
-                Ok(Message::Request(v))
-            }
-            3 => {
-                let v = cursor.decode().map_err(|e| e.extend("Response".into()))?;
-                Ok(Message::Response(v))
-            }
-            4 => {
-                let v = cursor.decode().map_err(|e| e.extend("Event".into()))?;
-                Ok(Message::Event(v))
-            }
-            _ => {
-                let msg_header_len = 2;
-                cursor.set_position(cursor.position() + command.msg_len as u64 - msg_header_len);
-                Err(PhotonDecodeError::from(format!(
-                    "Unknown message ({:#X})",
-                    msg_type
-                )))
-            }
-        }
-    }
-}
 
 pub struct Photon {
     fragments: HashMap<u32, Vec<ReliableFragment>>,
@@ -66,8 +34,14 @@ impl Photon {
                         |e| Some(Err(e)),
                         |command| match command {
                             Command::SendReliable(c) | Command::SendUnreliable(c) => Some(
-                                Message::try_from((&c, &mut cursor))
-                                    .map_err(|e| e.extend("SendReliable".into())),
+                                match Decode::<Message>::decode(&mut cursor) {
+                                    Ok(m) => Ok(m),
+                                    Err(e) => {
+                                        let msg_header_len = 2;
+                                        cursor.set_position(cursor.position() + c.msg_len as u64 - msg_header_len);
+                                        Err(e)
+                                    }
+                                }
                             ),
                             Command::SendReliableFragment(fragment) => {
                                 self.fragments
@@ -106,7 +80,16 @@ impl Photon {
                     buf.extend(fragment.payload.iter());
                 }
                 let mut c = Cursor::new(&buf[..]);
-                return Some(Message::try_from((&fragment.reliable_command, &mut c)));
+                return Some(
+                    match Decode::<Message>::decode(&mut c) {
+                        Ok(m) => Ok(m),
+                        Err(e) => {
+                            let msg_header_len = 2;
+                            c.set_position(c.position() + fragment.reliable_command.msg_len as u64 - msg_header_len);
+                            Err(e)
+                        }
+                    }
+                );
             }
         }
         None
