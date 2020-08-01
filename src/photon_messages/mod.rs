@@ -1,11 +1,14 @@
 //! Translates photon packets into game messages
 
-//! Generated messages based on assets/messages.json
+//! messages is generated based on assets/messages.json
+//! itemdb is generated based on assets/item_ids.txt
 //! See build.rs 
-pub mod messages;
-/// generated from assets/item_ids.txt
-/// See build.rs 
-mod itemdb;
+pub mod messages {
+    include!(concat!(env!("OUT_DIR"), "/messages.rs"));
+}
+pub mod itemdb {
+    include!(concat!(env!("OUT_DIR"), "/itemdb.rs"));
+}
 
 use itemdb::ITEMDB;
 

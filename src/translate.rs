@@ -1,5 +1,5 @@
-use packet_sniffer::UdpPacket;
-use photon_decode::Photon;
+use crate::packet_sniffer::UdpPacket;
+use crate::photon_decode::Photon;
 
 use crate::game::Event;
 use crate::photon_messages::into_game_message;

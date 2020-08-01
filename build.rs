@@ -1,3 +1,4 @@
+use std::env;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
@@ -75,9 +76,10 @@ fn generate_messages() -> String {
     let mut out = String::new();
 
     out.push_str(r"use log::*;
+use crate::photon_decode;
 use crate::photon_messages::Items;
-use photon_decode::Parameters;
-use photon_decode::Value;
+use crate::photon_decode::Parameters;
+use crate::photon_decode::Value;
 
 ");
 
@@ -214,7 +216,8 @@ fn generate_itemdb() -> String {
 }
 
 fn save_file(file_name: &str, content: &str) {  
-    let dest_path = Path::new(&"src/photon_messages").join(file_name);
+    let out_dir = env::var_os("OUT_DIR").unwrap();
+    let dest_path = Path::new(&out_dir).join(file_name);
     let mut f = File::create(&dest_path).unwrap();
     f.write_all(content.as_bytes()).unwrap();
 }

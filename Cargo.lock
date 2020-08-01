@@ -19,8 +19,7 @@ dependencies = [
  "fake_clock",
  "lazy_static",
  "log 0.4.8",
- "packet_sniffer",
- "photon_decode",
+ "pnet",
  "serde",
  "serde_json",
  "simplelog",
@@ -288,21 +287,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c62be47e61d1842b9170f0fdeec8eba98e60e90e5446449a0545e5152acd7096"
 dependencies = [
  "autocfg 1.0.0",
-]
-
-[[package]]
-name = "packet_sniffer"
-version = "0.1.0"
-dependencies = [
- "log 0.4.8",
- "pnet",
-]
-
-[[package]]
-name = "photon_decode"
-version = "0.2.1"
-dependencies = [
- "bytes",
 ]
 
 [[package]]

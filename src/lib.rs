@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate lazy_static;
 
+mod photon_decode;
+mod packet_sniffer;
 pub mod photon_messages;
 pub mod game;
 mod translate;

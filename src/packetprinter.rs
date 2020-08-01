@@ -1,5 +1,8 @@
 
 use std::sync::mpsc::{channel, Receiver, Sender};
+
+mod packet_sniffer;
+
 use packet_sniffer::UdpPacket;
 
 fn main() {
