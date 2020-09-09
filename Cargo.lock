@@ -11,7 +11,7 @@ dependencies = [
 
 [[package]]
 name = "aoaddons"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "bytes",
  "chrono 0.4.10",
