@@ -1,5 +1,6 @@
 use std::env;
 use std::fs::File;
+use std::fmt::Write as FmtWrite;
 use std::io::Write;
 use std::path::Path;
 
@@ -64,6 +65,7 @@ struct Message
 struct Messages
 {
     events: Vec<Message>,
+    requests: Vec<Message>,
     responses: Vec<Message>,
 }
 
@@ -86,7 +88,7 @@ use crate::photon_decode::Value;
     out.push_str(include_str!("assets/decode_macros.rs"));
     let messages: Messages = serde_json::from_str(include_str!("assets/messages.json")).expect("Missing assets/messages.json");
 
-    for msg in &[&messages.events[..], &messages.responses[..]].concat() {
+    for msg in &[&messages.events[..], &messages.requests[..], &messages.responses[..]].concat() {
         let mut struct_params = String::new();
         for param in &msg.params {
             if param.optional.is_some() {
@@ -138,16 +140,21 @@ impl {0} {{
 
     out.push_str("\n#[derive(Debug, Clone, PartialEq)]\n");
     out.push_str("pub enum Message {\n");
-    for msg in &[&messages.events[..], &messages.responses[..]].concat() {
+    for msg in &[&messages.events[..], &messages.requests[..], &messages.responses[..]].concat() {
         out.push_str(&format!("    {0}({0}),\n", msg.name));
     }
     out.push_str("}");
 
     let mut event_matches = String::new();
+    let mut requests_matches = String::new();
     let mut responses_matches = String::new();
 
     for msg in &messages.events {
         event_matches.push_str(&format!("                Some(photon_decode::Value::Short({})) => {}::parse(parameters),\n", msg.code, msg.name));
+    }
+
+    for msg in &messages.requests {
+        requests_matches.push_str(&format!("                Some(photon_decode::Value::Short({})) => {}::parse(parameters),\n", msg.code, msg.name));
     }
 
     for msg in &messages.responses {
@@ -173,6 +180,7 @@ pub fn into_game_message(photon_message: photon_decode::Message) -> Option<Messa
             parameters
         }}) => {{
             match parameters.get(&253u8) {{
+{}
                 _ => None
             }}
         }},
@@ -190,16 +198,17 @@ pub fn into_game_message(photon_message: photon_decode::Message) -> Option<Messa
         _ => None
     }}
 }}
-"###, event_matches, responses_matches));
+"###, event_matches, requests_matches, responses_matches));
     out
 }
 
 fn generate_itemdb() -> String {
     let mut out = String::new();
 
-    out.push_str("use std::collections::HashMap;\n\n");
-    out.push_str("lazy_static! {\n");
-    out.push_str("    pub static ref ITEMDB: HashMap<u32, &'static str> = {[\n");
+    writeln!(&mut out, "use std::collections::HashMap;").unwrap();
+    writeln!(&mut out, "").unwrap();
+    writeln!(&mut out, "lazy_static! {{").unwrap();
+    writeln!(&mut out, "    pub static ref ITEMDB: HashMap<u32, &'static str> = {{[").unwrap();
 
     include_str!("assets/item_ids.txt").split('\n').filter_map(|line| {
         let v: Vec<&str> = line.split(',').collect();
@@ -207,11 +216,10 @@ fn generate_itemdb() -> String {
         let item  = v.get(1)?.to_owned();
         Some((id, item))
     }).for_each(|(id, item)| {
-        out.push_str(&format!("        ({}, \"{}\"),\n", id, item))
+        writeln!(&mut out, "        ({}, \"{}\"),", id, item.trim()).unwrap();
     });
-    out.push_str("    ].iter().cloned().collect()};\n");
-    out.push_str("}");
-
+    writeln!(&mut out, "    ].iter().cloned().collect()}};").unwrap();
+    write!(&mut out, "}}").unwrap();
     out
 }
 

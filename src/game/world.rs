@@ -102,6 +102,9 @@ impl World {
                 );
                 None
             }
+            photon_messages::Message::ChatSay(msg) => {
+                EventList::from(self.get_intermediate(msg)?).values()
+            },
             photon_messages::Message::PartyInvitation(_) => None,
             photon_messages::Message::PartyJoined(msg) => {
                 let evt = self.party.joined(msg)?;

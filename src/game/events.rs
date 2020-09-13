@@ -46,4 +46,5 @@ pub enum Event {
     UpdateFame(Fame),
     UpdateItems(Items),
     UpdateParty(Party),
+    ChatSay(String),
 }

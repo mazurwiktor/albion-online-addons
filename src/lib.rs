@@ -1,11 +1,11 @@
 #[macro_use]
 extern crate lazy_static;
 
-mod photon_decode;
+pub mod photon_decode;
 mod packet_sniffer;
 pub mod photon_messages;
 pub mod game;
-mod translate;
+pub mod translate;
 mod publisher;
 
 use log::*;
@@ -23,7 +23,7 @@ use crate::publisher::Publisher;
 
 pub use crate::publisher::Subscribers;
 
-use crate::translate::udp_packet_to_game_events;
+pub use crate::translate::udp_packet_to_game_events;
 
 pub enum InitializationError {
     NetworkInterfaceListMissing,

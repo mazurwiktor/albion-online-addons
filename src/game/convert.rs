@@ -168,3 +168,9 @@ impl From<EventIntermediate<messages::CharacterEquipmentChanged>> for EventList 
         })])
     }
 }
+
+impl From<EventIntermediate<messages::ChatSay>> for EventList {
+    fn from(intermediate: EventIntermediate<messages::ChatSay>) -> Self {
+        Self::new(vec![events::Event::ChatSay(intermediate.message.text)])
+    }
+}

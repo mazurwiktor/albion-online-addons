@@ -25,7 +25,7 @@ pub fn udp_packet_to_game_events(game_world: &mut World, photon: &mut Photon, pa
         .collect()
 }
 
-fn raw_to_photon_messages(photon: &mut Photon, packet_payload: &[u8]) -> Vec<Message> {
+pub fn raw_to_photon_messages(photon: &mut Photon, packet_payload: &[u8]) -> Vec<Message> {
     return photon
         .decode(packet_payload)
         .into_iter()

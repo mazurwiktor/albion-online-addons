@@ -156,8 +156,7 @@
         {
             "name": "PartyInvitation",
             "code": 213,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyJoined",
@@ -183,8 +182,7 @@
         {
             "name": "PartyDisbanded",
             "code": 215,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyPlayerJoined",
@@ -210,8 +208,7 @@
         {
             "name": "PartyChangedOrder",
             "code": 217,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyPlayerLeft",
@@ -232,49 +229,54 @@
         {
             "name": "PartyLeaderChanged",
             "code": 219,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyLootSettingChangedPlayer",
             "code": 220,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartySilverGained",
             "code": 221,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyPlayerUpdated",
             "code": 222,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyInvitationPlayerBusy",
             "code": 223,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyMarkedObjectsUpdated",
             "code": 224,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartyOnClusterPartyJoined",
             "code": 225,
-            "params": [
-            ]
+            "params": []
         },
         {
             "name": "PartySetRoleFlag",
             "code": 226,
+            "params": []
+        }
+    ],
+    "requests": [
+        {
+            "name": "ChatSay",
+            "code": 188,
             "params": [
+                {
+                    "name": "text",
+                    "id": 0,
+                    "param_type": "String"
+                }
             ]
         }
     ],
