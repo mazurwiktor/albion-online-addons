@@ -155,12 +155,12 @@
         },
         {
             "name": "PartyInvitation",
-            "code": 213,
+            "code": 214,
             "params": []
         },
         {
             "name": "PartyJoined",
-            "code": 214,
+            "code": 215,
             "params": [
                 {
                     "name": "party_id",
@@ -181,12 +181,12 @@
         },
         {
             "name": "PartyDisbanded",
-            "code": 215,
+            "code": 216,
             "params": []
         },
         {
             "name": "PartyPlayerJoined",
-            "code": 216,
+            "code": 217,
             "params": [
                 {
                     "name": "party_id",
@@ -207,12 +207,12 @@
         },
         {
             "name": "PartyChangedOrder",
-            "code": 217,
+            "code": 218,
             "params": []
         },
         {
             "name": "PartyPlayerLeft",
-            "code": 218,
+            "code": 219,
             "params": [
                 {
                     "name": "party_id",
@@ -228,42 +228,42 @@
         },
         {
             "name": "PartyLeaderChanged",
-            "code": 219,
-            "params": []
-        },
-        {
-            "name": "PartyLootSettingChangedPlayer",
             "code": 220,
             "params": []
         },
         {
-            "name": "PartySilverGained",
+            "name": "PartyLootSettingChangedPlayer",
             "code": 221,
             "params": []
         },
         {
-            "name": "PartyPlayerUpdated",
+            "name": "PartySilverGained",
             "code": 222,
             "params": []
         },
         {
-            "name": "PartyInvitationPlayerBusy",
+            "name": "PartyPlayerUpdated",
             "code": 223,
             "params": []
         },
         {
-            "name": "PartyMarkedObjectsUpdated",
+            "name": "PartyInvitationPlayerBusy",
             "code": 224,
             "params": []
         },
         {
-            "name": "PartyOnClusterPartyJoined",
+            "name": "PartyMarkedObjectsUpdated",
             "code": 225,
             "params": []
         },
         {
-            "name": "PartySetRoleFlag",
+            "name": "PartyOnClusterPartyJoined",
             "code": 226,
+            "params": []
+        },
+        {
+            "name": "PartySetRoleFlag",
+            "code": 227,
             "params": []
         }
     ],

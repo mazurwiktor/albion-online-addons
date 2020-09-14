@@ -3,8 +3,8 @@ use std::sync::mpsc::{channel, Receiver, Sender};
 
 extern crate serde_json;
 
-mod photon_decode;
 mod packet_sniffer;
+mod photon_decode;
 use packet_sniffer::UdpPacket;
 
 use aoaddons::game::World;
@@ -20,7 +20,7 @@ fn main() {
                 Arg::with_name("MODE")
                     .help("What mode to run the program in")
                     .index(1)
-                    .possible_values(&["raw", "decoding"])
+                    .possible_values(&["raw", "decoding", "messages", "events"])
                     .default_value("raw")
                     .required(true),
             )
@@ -47,25 +47,29 @@ fn main() {
 
     if let Some(ref matches) = matches.subcommand_matches("sniff") {
         sniff(
-            matches.value_of("MODE").unwrap(), 
-            if let Some(port) = matches.value_of("port") {Some(port.parse::<u16>().unwrap())} else { None });
+            matches.value_of("MODE").unwrap(),
+            if let Some(port) = matches.value_of("port") {
+                Some(port.parse::<u16>().unwrap())
+            } else {
+                None
+            },
+        );
     }
 
     if let Some(ref matches) = matches.subcommand_matches("test") {
-        let payloads : Vec<Vec<u8>> = serde_json::from_str(matches.value_of("payload").unwrap()).unwrap();
+        let payloads: Vec<Vec<u8>> =
+            serde_json::from_str(matches.value_of("payload").unwrap()).unwrap();
         game_events(&payloads);
     }
 }
 
-fn sniff(mode: &str, port: Option<u16>)
-{
+fn sniff(mode: &str, port: Option<u16>) {
     if let Ok(interfaces) = packet_sniffer::network_interfaces() {
         let (tx, rx): (Sender<UdpPacket>, Receiver<UdpPacket>) = channel();
         packet_sniffer::receive(interfaces, tx);
 
         loop {
             if let Ok(packet) = rx.recv() {
-
                 if let Some(port) = port {
                     if packet.destination_port != port && packet.source_port != port {
                         continue;
@@ -83,6 +87,31 @@ fn sniff(mode: &str, port: Option<u16>)
                             .try_decode(&packet.payload)
                             .into_iter()
                             .for_each(|p| println!("[DECODING] {:?}", p));
+                    }
+                    "messages" => {
+                        let mut photon = Photon::new();
+                        
+                        raw_to_photon_messages(&mut photon, &packet.payload)
+                            .into_iter()
+                            .for_each(|i| {
+                                println!("[RAW] {:?}", packet);
+                                println!("[GameMessage] {:?}", i) 
+                            });
+                    },
+                    "events" => {
+                        let mut photon = Photon::new();
+                        let mut world = World::new();
+                        
+                        raw_to_photon_messages(&mut photon, &packet.payload)
+                            .into_iter()
+                            .inspect(|i| {
+                                println!("[RAW] {:?}", packet);
+                                println!("[GameMessage] {:?}", i)
+                            })
+                            .map(|message| world.transform(message))
+                            .flatten()
+                            .flatten()
+                            .for_each(|e| println!("[GameEvent] {:?}", e));
                     }
                     _ => unreachable!(),
                 }
@@ -104,11 +133,11 @@ fn game_events(payloads: &Vec<Vec<u8>>) {
             .for_each(|p| println!("[DECODING] {:?}", p));
 
         raw_to_photon_messages(&mut photon, &payload)
-        .into_iter()
-        .inspect(|i| println!("[GameMessage] {:?}", i))
-        .map(|message| world.transform(message))
-        .flatten()
-        .flatten()
-        .for_each(|e| println!("[GameEvent] {:?}", e));
+            .into_iter()
+            .inspect(|i| println!("[GameMessage] {:?}", i))
+            .map(|message| world.transform(message))
+            .flatten()
+            .flatten()
+            .for_each(|e| println!("[GameEvent] {:?}", e));
     }
 }
