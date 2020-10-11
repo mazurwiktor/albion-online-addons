@@ -12,6 +12,7 @@ use log::*;
 use simplelog::*;
 use std::env;
 use std::fs::File;
+use std::path::Path;
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::thread;
 
@@ -58,11 +59,23 @@ pub fn initialize(subscribers: Subscribers) -> Result<(), InitializationError> {
     Ok(())
 }
 
+#[cfg(not(target_os = "windows"))]
 fn initialize_logging() {
     CombinedLogger::init(vec![WriteLogger::new(
         get_logging_level(),
         Config::default(),
         File::create("aoaddons.log").unwrap(),
+    )])
+    .unwrap();
+}
+
+#[cfg(target_os = "windows")]
+fn initialize_logging() {
+    
+    CombinedLogger::init(vec![WriteLogger::new(
+        get_logging_level(),
+        Config::default(),
+        File::create(Path::new(&env::var("APPDATA").unwrap()).join("aoaddons.log")).unwrap(),
     )])
     .unwrap();
 }
