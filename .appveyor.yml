@@ -1,0 +1,29 @@
+image: Visual Studio 2017
+environment:
+  matrix:
+    # Stable 64-bit MSVC
+    - channel: stable
+      target: x86_64-pc-windows-msvc
+      WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/x64/Packet.lib"
+    # Stable 32-bit MSVC
+    - channel: stable
+      target: i686-pc-windows-msvc
+      WPD_LIB_PATH: "C:/dl/wpdpack/WpdPack/Lib/Packet.lib"
+
+# From https://github.com/starkat99/appveyor-rust/blob/master/appveyor.yml
+install:
+  - ps: mkdir C:/dl
+  - curl -o "C:/dl/wpd.zip" "https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip"
+  - ps: Add-Type -AssemblyName system.io.compression.filesystem
+  - ps: "[io.compression.zipfile]::ExtractToDirectory(\"C:/dl/wpd.zip\", \"C:/dl/wpdpack\")"
+  - ps: mkdir lib
+  - ps: cp ${env:WPD_LIB_PATH} "lib"
+  - SET LIB="lib";%lib%
+  - appveyor DownloadFile https://win.rustup.rs/ -FileName rustup-init.exe
+  - rustup-init -yv --default-toolchain nightly --default-host %target%
+  - set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+  - rustc -vV
+  - cargo -vV
+
+test_script:
+  - cargo test
