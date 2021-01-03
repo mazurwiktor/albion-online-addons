@@ -74,7 +74,7 @@ fn initialize_logging() {
     CombinedLogger::init(vec![WriteLogger::new(
         get_logging_level(),
         Config::default(),
-        File::create(Path::new(&env::var("APPDATA").unwrap()).join("aoaddons.log")).unwrap(),
+        File::create(std::path::Path::new(&env::var("APPDATA").unwrap()).join("aoaddons.log")).unwrap(),
     )])
     .unwrap();
 }
