@@ -62,6 +62,7 @@ impl Photon {
         )
     }
 
+    #[allow(dead_code)]
     pub fn decode(&mut self, payload: &[u8]) -> Vec<Message> {
         if let Ok(messages) = self.try_decode(payload) {
             return messages.into_iter().filter_map(Result::ok).collect();

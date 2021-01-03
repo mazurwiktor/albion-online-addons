@@ -106,6 +106,7 @@ pub struct OperationRequest {
     pub parameters: Parameters,
 }
 
+#[allow(dead_code)]
 #[derive(Clone, Debug, PartialEq)]
 pub enum Value {
     None,

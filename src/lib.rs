@@ -12,7 +12,6 @@ use log::*;
 use simplelog::*;
 use std::env;
 use std::fs::File;
-use std::path::Path;
 use std::sync::mpsc::{channel, Receiver, Sender};
 use std::thread;
 
