@@ -1,11 +1,11 @@
-use photon_decode;
+use crate::photon_decode;
 
-use photon_decode::Message;
-use photon_decode::EventData;
-use photon_decode::OperationRequest;
-use photon_decode::OperationResponse;
-use photon_decode::Value;
-use photon_decode::Parameters;
+use crate::photon_decode::Message;
+use crate::photon_decode::EventData;
+use crate::photon_decode::OperationRequest;
+use crate::photon_decode::OperationResponse;
+use crate::photon_decode::Value;
+use crate::photon_decode::Parameters;
 
 #[test]
 fn test_single_event_message()

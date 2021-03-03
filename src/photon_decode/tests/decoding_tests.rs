@@ -1,4 +1,4 @@
-use photon_decode::*;
+use crate::photon_decode::*;
 
 use std::io::Cursor;
 

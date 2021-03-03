@@ -2,6 +2,8 @@ mod decode;
 mod error;
 mod layout;
 mod codes;
+#[cfg(test)]
+mod tests;
 
 pub use decode::*;
 use error::*;
