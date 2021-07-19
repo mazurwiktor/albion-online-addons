@@ -2,20 +2,16 @@
 
 //! messages is generated based on assets/messages.json
 //! itemdb is generated based on assets/item_ids.txt
-//! See build.rs 
+//! See build.rs
 pub mod messages {
     include!(concat!(env!("OUT_DIR"), "/messages.rs"));
 }
-pub mod itemdb {
-    include!(concat!(env!("OUT_DIR"), "/itemdb.rs"));
-}
-
-use itemdb::ITEMDB;
+pub mod itemdb;
 
 use std::convert::From;
 
-pub use messages::Message;
 pub use messages::into_game_message;
+pub use messages::Message;
 
 /// Player inventory items
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -40,13 +36,13 @@ impl From<std::vec::Vec<u32>> for Items {
                     .get($id)
                     .iter()
                     .filter(|id| **id != &0u32)
-                    .map(|code| ITEMDB.get(code).map(|s| s.to_string()))
+                    .map(|code| itemdb::get_db().get(code).map(|s| s.to_string()))
                     .filter_map(|o| o)
                     .next()
             };
         }
 
-        Self{
+        Self {
             weapon: extract!(0),
             offhand: extract!(1),
             helmet: extract!(2),
@@ -61,8 +57,22 @@ impl From<std::vec::Vec<u32>> for Items {
     }
 }
 
-
 #[test]
 fn test_itemdb_generation() {
-    assert_eq!(ITEMDB.get(&0), Some(&"UNIQUE_HIDEOUT"));
+    assert_eq!(
+        itemdb::get_db().get(&0),
+        Some(&String::from("UNIQUE_HIDEOUT"))
+    );
+}
+
+#[test]
+fn test_itemdb_second_access() {
+    assert_eq!(
+        itemdb::get_db().get(&0),
+        Some(&String::from("UNIQUE_HIDEOUT"))
+    );
+    assert_eq!(
+        itemdb::get_db().get(&1),
+        Some(&String::from("T1_FARM_CARROT_SEED"))
+    );
 }

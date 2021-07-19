@@ -1,12 +1,13 @@
 #[macro_use]
 extern crate lazy_static;
 
-pub mod photon_decode;
-mod packet_sniffer;
-pub mod photon_messages;
+pub mod config;
 pub mod game;
-pub mod translate;
+mod packet_sniffer;
+pub mod photon_decode;
+pub mod photon_messages;
 mod publisher;
+pub mod translate;
 
 use log::*;
 use simplelog::*;
@@ -29,7 +30,13 @@ pub enum InitializationError {
     NetworkInterfaceListMissing,
 }
 
-pub fn initialize(subscribers: Subscribers) -> Result<(), InitializationError> {
+pub fn initialize(
+    subscribers: Subscribers,
+    config: Option<config::Config>,
+) -> Result<(), InitializationError> {
+    if let Some(c) = config {
+        config::set_config(c);
+    }
     initialize_logging();
     if let Ok(interfaces) = packet_sniffer::network_interfaces() {
         thread::spawn(move || {
@@ -70,11 +77,11 @@ fn initialize_logging() {
 
 #[cfg(target_os = "windows")]
 fn initialize_logging() {
-    
     CombinedLogger::init(vec![WriteLogger::new(
         get_logging_level(),
         Config::default(),
-        File::create(std::path::Path::new(&env::var("APPDATA").unwrap()).join("aoaddons.log")).unwrap(),
+        File::create(std::path::Path::new(&env::var("APPDATA").unwrap()).join("aoaddons.log"))
+            .unwrap(),
     )])
     .unwrap();
 }
