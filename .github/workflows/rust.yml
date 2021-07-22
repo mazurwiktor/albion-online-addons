@@ -11,17 +11,25 @@ env:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
+  test:
+    needs: [build, test]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Run tests
       run: cargo test --verbose
   publish:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+    needs: [build, test]
     runs-on: ubuntu-latest
+
     steps:
         - uses: actions/checkout@v2
         - uses: actions-rs/toolchain@v1
