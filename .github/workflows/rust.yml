@@ -18,7 +18,6 @@ jobs:
     - name: Build
       run: cargo build --verbose
   test:
-    needs: [build, test]
     runs-on: ubuntu-latest
 
     steps:
