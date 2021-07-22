@@ -7,3 +7,4 @@ damage-meter.log
 .vscode
 .cargo_vcs_info.json
 *.orig
+lib
