@@ -159,7 +159,7 @@ mod tests {
         ($container:expr, $value:expr) => {
             assert!(
                 format!("{:?}", $container).contains($value),
-                format!("{:?} does not contains {}", $container, $value)
+                "{:?} does not contains {}", $container, $value
             );
         };
     }
